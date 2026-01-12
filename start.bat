@@ -32,14 +32,22 @@ REM Verifica se Python está instalado
 echo [2/4] Verificando Python...
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo.
-    echo [ERRO] Python nao encontrado!
-    echo.
-    echo Por favor, instale o Python em: https://www.python.org/downloads/
-    echo Recomendado: Python 3.7 ou superior
-    echo.
-    pause
-    exit /b 1
+    REM Tenta comando 'py' como alternativa no Windows
+    py --version >nul 2>&1
+    if %errorlevel% neq 0 (
+        echo.
+        echo [ERRO] Python nao encontrado!
+        echo.
+        echo Por favor, instale o Python em: https://www.python.org/downloads/
+        echo Recomendado: Python 3.7 ou superior
+        echo.
+        pause
+        exit /b 1
+    ) else (
+        set PYTHON_CMD=py
+    )
+) else (
+    set PYTHON_CMD=python
 )
 echo [OK] Python encontrado!
 
@@ -72,7 +80,7 @@ echo Pressione Ctrl+C para encerrar o sistema
 echo.
 
 REM Inicia o servidor Python
-python server.py
+%PYTHON_CMD% server.py
 
 REM Se o servidor parar, mostra mensagem
 echo.

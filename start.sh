@@ -31,15 +31,26 @@ echo -e "${GREEN}[OK] Node.js encontrado!${NC}"
 
 # Check if Python is installed
 echo -e "${BLUE}[2/4] Verificando Python...${NC}"
-if ! command -v python3 &> /dev/null; then
-    echo -e "${RED}[ERRO] Python não encontrado!${NC}"
+PYTHON_CMD=""
+if command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+elif command -v python &> /dev/null; then
+    # Check if python is version 3
+    PYTHON_VERSION=$(python --version 2>&1 | grep -oP '(?<=Python )\d+' | head -1)
+    if [ "$PYTHON_VERSION" = "3" ]; then
+        PYTHON_CMD="python"
+    fi
+fi
+
+if [ -z "$PYTHON_CMD" ]; then
+    echo -e "${RED}[ERRO] Python 3 não encontrado!${NC}"
     echo ""
     echo "Por favor, instale o Python em: https://www.python.org/downloads/"
     echo "Recomendado: Python 3.7 ou superior"
     echo ""
     exit 1
 fi
-echo -e "${GREEN}[OK] Python encontrado!${NC}"
+echo -e "${GREEN}[OK] Python encontrado: $PYTHON_CMD${NC}"
 
 # Install npm dependencies if needed
 echo -e "${BLUE}[3/4] Verificando dependências Node.js...${NC}"
@@ -68,7 +79,7 @@ echo -e "${YELLOW}Pressione Ctrl+C para encerrar o sistema${NC}"
 echo ""
 
 # Start the Python server
-python3 server.py
+$PYTHON_CMD server.py
 
 # If the server stops, show message
 echo ""

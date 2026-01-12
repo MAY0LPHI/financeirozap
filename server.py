@@ -15,15 +15,9 @@ import time
 import webbrowser
 from urllib.parse import parse_qs, urlparse
 
-# Port configuration with validation
+# Port configuration (will be validated in main())
 PORT = 8080
 NODE_PORT = 3000
-
-# Validate ports are in acceptable range
-if not (1024 <= PORT <= 65535):
-    raise ValueError(f"PORT must be between 1024 and 65535, got {PORT}")
-if not (1024 <= NODE_PORT <= 65535):
-    raise ValueError(f"NODE_PORT must be between 1024 and 65535, got {NODE_PORT}")
 
 qr_code_data = {"qr": None, "status": "Iniciando...", "timestamp": 0}
 node_process = None
@@ -320,7 +314,7 @@ class WhatsAppServerHandler(http.server.SimpleHTTPRequestHandler):
         }
         
         function openDashboard() {
-            const dashboardUrl = 'http://localhost:''' + str(NODE_PORT) + '''';
+            const dashboardUrl = `http://localhost:''' + str(NODE_PORT) + '''`;
             window.open(dashboardUrl, '_blank');
         }
         
@@ -400,11 +394,10 @@ def start_node_server():
             print("Instalando dependências npm...")
             qr_code_data["status"] = "Instalando dependências..."
             # Use shell=False for security, provide explicit command
-            result = subprocess.run(['npm', 'install'], 
-                                   check=True,
-                                   cwd=os.getcwd(),
-                                   capture_output=True,
-                                   text=True)
+            print("Instalando dependências npm...")
+            subprocess.run(['npm', 'install'], 
+                          check=True,
+                          cwd=os.getcwd())
         
         # Start Node.js server with explicit path validation
         node_path = 'node'
@@ -434,7 +427,22 @@ def start_node_server():
 
 def main():
     """Main function to start the Python server."""
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    # Validate ports are in acceptable range
+    if not (1024 <= PORT <= 65535):
+        print(f"❌ Erro: PORT deve estar entre 1024 e 65535, recebido {PORT}")
+        return 1
+    if not (1024 <= NODE_PORT <= 65535):
+        print(f"❌ Erro: NODE_PORT deve estar entre 1024 e 65535, recebido {NODE_PORT}")
+        return 1
+    
+    # Change to script directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
+    
+    # Validate we're in the project root
+    if not os.path.exists('index.js'):
+        print("❌ Erro: index.js não encontrado. Execute o script do diretório raiz do projeto.")
+        return 1
     
     print("=" * 60)
     print("  FinanceiroZap - Sistema de Controle Financeiro WhatsApp")
