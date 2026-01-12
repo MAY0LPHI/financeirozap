@@ -32,6 +32,8 @@ cd financeirozap
 npm install
 ```
 
+> **Nota**: O comando `npm install` instalará automaticamente o Chrome/Chromium necessário para o funcionamento do bot. Se houver algum erro, você pode executar manualmente: `npm run setup`
+
 3. Inicie o bot:
 ```bash
 npm start
@@ -42,6 +44,27 @@ npm start
    - Vá em **Configurações** > **Aparelhos conectados**
    - Toque em **Conectar um aparelho**
    - Escaneie o QR Code exibido no terminal
+
+### Solução de Problemas
+
+**Erro: "Could not find Chrome"**
+- **Causa**: O bot precisa do Chrome/Chromium para funcionar (usado pelo WhatsApp Web)
+- **Solução 1**: Execute `npm run setup` para baixar e instalar o Chrome automaticamente
+- **Solução 2**: Execute manualmente: `npx @puppeteer/browsers install chrome@stable`
+- **Solução 3**: Instale o Chrome ou Chromium no seu sistema operacional
+
+**Erro: "Cannot find module 'whatsapp-web.js'"**
+- Certifique-se de ter executado `npm install` primeiro
+- Verifique se a pasta `node_modules` foi criada
+
+**QR Code não aparece**
+- Verifique sua conexão com a internet
+- Certifique-se de que não há firewalls bloqueando a conexão
+- Aguarde alguns segundos - o bot pode levar um tempo para inicializar
+
+**Erro de rede ao instalar dependências**
+- Se estiver atrás de um proxy, configure as variáveis de ambiente adequadas
+- Tente usar uma conexão de internet diferente
 
 ## 💬 Como Usar
 

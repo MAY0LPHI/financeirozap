@@ -310,6 +310,21 @@ client.on('disconnected', (reason) => {
     console.log('Cliente desconectado:', reason);
 });
 
-// Initialize client
+// Initialize client with error handling
 console.log('Iniciando bot WhatsApp...');
-client.initialize();
+console.log('Aguarde enquanto o bot se conecta...\n');
+
+client.initialize().catch(error => {
+    console.error('\n❌ Erro ao inicializar o bot:', error.message);
+    
+    if (error.message.includes('Could not find Chrome')) {
+        console.error('\n🔧 SOLUÇÃO:');
+        console.error('   O Chrome/Chromium não está instalado.');
+        console.error('   Execute um dos seguintes comandos:\n');
+        console.error('   1. npm run setup');
+        console.error('   2. npx @puppeteer/browsers install chrome@stable\n');
+        console.error('   Ou instale o Chrome/Chromium manualmente no sistema.');
+    }
+    
+    process.exit(1);
+});
