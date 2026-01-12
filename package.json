@@ -1,0 +1,17 @@
+{
+  "name": "financeirozap",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp para gerenciamento financeiro pessoal",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["whatsapp", "bot", "financeiro", "gerenciamento"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "whatsapp-web.js": "^1.23.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
