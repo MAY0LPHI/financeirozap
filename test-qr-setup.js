@@ -71,12 +71,13 @@ const possibleChromePaths = [
 ];
 
 let chromeFound = false;
-let chromePath = null;
+let foundPath = null;
 
-for (const chromePath of possibleChromePaths) {
-    if (chromePath && fs.existsSync(chromePath)) {
-        console.log(`  ✅ Chrome/Chromium encontrado: ${chromePath}`);
+for (const checkPath of possibleChromePaths) {
+    if (checkPath && fs.existsSync(checkPath)) {
+        console.log(`  ✅ Chrome/Chromium encontrado: ${checkPath}`);
         chromeFound = true;
+        foundPath = checkPath;
         break;
     }
 }

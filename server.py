@@ -349,7 +349,7 @@ def read_qr_from_node_output():
             print(line)  # Print to console
             
             # Detect Chrome/Chromium issues
-            if 'Could not find Chrome' in line or 'Chrome' in line and 'not found' in line.lower():
+            if 'Could not find Chrome' in line or ('Chrome' in line and 'not found' in line.lower()):
                 qr_code_data["status"] = "Erro: Chrome/Chromium não encontrado"
                 print("\n❌ Chrome/Chromium não encontrado!")
                 print("Por favor, instale o Chrome ou Chromium:")
@@ -454,25 +454,24 @@ def check_chrome_installation():
             return True, path
     
     # Try which command on Unix-like systems
-    try:
-        result = subprocess.run(['which', 'google-chrome'], 
-                              capture_output=True, 
-                              text=True,
-                              timeout=5)
-        if result.returncode == 0 and result.stdout.strip():
-            return True, result.stdout.strip()
-    except:
-        pass
+    def try_which(command):
+        """Helper to check if a command exists using 'which'."""
+        try:
+            result = subprocess.run(['which', command], 
+                                  capture_output=True, 
+                                  text=True,
+                                  timeout=5)
+            if result.returncode == 0 and result.stdout.strip():
+                return result.stdout.strip()
+        except:
+            pass
+        return None
     
-    try:
-        result = subprocess.run(['which', 'chromium'], 
-                              capture_output=True, 
-                              text=True,
-                              timeout=5)
-        if result.returncode == 0 and result.stdout.strip():
-            return True, result.stdout.strip()
-    except:
-        pass
+    # Try common Chrome commands
+    for command in ['google-chrome', 'chromium']:
+        path = try_which(command)
+        if path:
+            return True, path
     
     return False, None
 
