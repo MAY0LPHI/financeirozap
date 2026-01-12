@@ -1,0 +1,85 @@
+{
+  "transactions": [
+    {
+      "id": "1768180814516-s4nuqrsgu",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "income",
+      "amount": 3000,
+      "category": "Receita",
+      "description": "Salário mensal",
+      "date": "2026-01-12T01:20:14.516Z"
+    },
+    {
+      "id": "1768180814517-tuew4e72c",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "income",
+      "amount": 500,
+      "category": "Receita",
+      "description": "Freelance",
+      "date": "2026-01-12T01:20:14.517Z"
+    },
+    {
+      "id": "1768180814517-f07444ry5",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 800,
+      "category": "Moradia",
+      "description": "Aluguel",
+      "date": "2026-01-12T01:20:14.517Z"
+    },
+    {
+      "id": "1768180814517-22lms7ywd",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 250,
+      "category": "Alimentação",
+      "description": "Supermercado",
+      "date": "2026-01-12T01:20:14.517Z"
+    },
+    {
+      "id": "1768180814518-xqxrm9t2n",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 150,
+      "category": "Transporte",
+      "description": "Gasolina",
+      "date": "2026-01-12T01:20:14.518Z"
+    },
+    {
+      "id": "1768180814518-ywmfntkhs",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 100,
+      "category": "Lazer",
+      "description": "Cinema e restaurante",
+      "date": "2026-01-12T01:20:14.518Z"
+    },
+    {
+      "id": "1768180814518-o10359nta",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 80,
+      "category": "Saúde",
+      "description": "Farmácia",
+      "date": "2026-01-12T01:20:14.518Z"
+    },
+    {
+      "id": "1768180814519-c6tm8qwoj",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 200,
+      "category": "Educação",
+      "description": "Curso online",
+      "date": "2026-01-12T01:20:14.519Z"
+    },
+    {
+      "id": "1768180814519-s59fcrfmo",
+      "userId": "1768180814516-0yfenb1f3",
+      "type": "expense",
+      "amount": 50,
+      "category": "Outros",
+      "description": "Diversos",
+      "date": "2026-01-12T01:20:14.519Z"
+    }
+  ]
+}
