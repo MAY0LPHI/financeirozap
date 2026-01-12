@@ -15,8 +15,16 @@ import time
 import webbrowser
 from urllib.parse import parse_qs, urlparse
 
+# Port configuration with validation
 PORT = 8080
 NODE_PORT = 3000
+
+# Validate ports are in acceptable range
+if not (1024 <= PORT <= 65535):
+    raise ValueError(f"PORT must be between 1024 and 65535, got {PORT}")
+if not (1024 <= NODE_PORT <= 65535):
+    raise ValueError(f"NODE_PORT must be between 1024 and 65535, got {NODE_PORT}")
+
 qr_code_data = {"qr": None, "status": "Iniciando...", "timestamp": 0}
 node_process = None
 
@@ -383,20 +391,33 @@ def start_node_server():
     qr_code_data["status"] = "Iniciando servidor Node.js..."
     
     try:
+        # Validate we're in the correct directory
+        if not os.path.exists('index.js'):
+            raise FileNotFoundError("index.js not found. Please run from the project root directory.")
+        
         # Check if npm packages are installed
         if not os.path.exists('node_modules'):
             print("Instalando dependências npm...")
             qr_code_data["status"] = "Instalando dependências..."
-            subprocess.run(['npm', 'install'], check=True)
+            # Use shell=False for security, provide explicit command
+            result = subprocess.run(['npm', 'install'], 
+                                   check=True,
+                                   cwd=os.getcwd(),
+                                   capture_output=True,
+                                   text=True)
         
-        # Start Node.js server
+        # Start Node.js server with explicit path validation
+        node_path = 'node'
+        index_path = os.path.join(os.getcwd(), 'index.js')
+        
         node_process = subprocess.Popen(
-            ['node', 'index.js'],
+            [node_path, index_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            universal_newlines=True
+            universal_newlines=True,
+            cwd=os.getcwd()
         )
         
         # Start monitoring thread
