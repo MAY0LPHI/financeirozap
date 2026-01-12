@@ -86,6 +86,7 @@ financeirozap/
 - Node.js (versão 14 ou superior)
 - Python 3.7 ou superior
 - npm ou yarn
+- **Google Chrome ou Chromium** (necessário para o bot do WhatsApp)
 
 ### 🚀 Início Rápido (Recomendado)
 
@@ -230,6 +231,66 @@ Para modo de desenvolvimento com recarga automática:
 ```bash
 npm run dev
 ```
+
+## 🔧 Solução de Problemas
+
+### Problema: QR Code não é exibido
+
+Se o QR Code do WhatsApp não aparecer, verifique:
+
+1. **Chrome/Chromium está instalado?**
+   
+   **Linux (Ubuntu/Debian):**
+   ```bash
+   sudo apt update
+   sudo apt install chromium-browser
+   # ou
+   sudo apt install google-chrome-stable
+   ```
+   
+   **Windows:**
+   - Baixe e instale o Google Chrome em: https://www.google.com/chrome/
+   
+   **macOS:**
+   ```bash
+   brew install --cask google-chrome
+   ```
+
+2. **Configurar caminho do Chrome manualmente:**
+   
+   Crie um arquivo `.env` baseado no `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edite o arquivo `.env` e defina o caminho do Chrome:
+   ```
+   CHROME_PATH=/usr/bin/google-chrome
+   ```
+   
+   Caminhos comuns:
+   - Linux: `/usr/bin/google-chrome`, `/usr/bin/chromium`, `/usr/bin/chromium-browser`
+   - Windows: `C:\Program Files\Google\Chrome\Application\chrome.exe`
+   - macOS: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
+
+3. **Reinstalar dependências:**
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+### Problema: Erro de conexão ERR_NAME_NOT_RESOLVED
+
+Este erro indica problema de conexão com a internet. Verifique:
+- Sua conexão com a internet está funcionando
+- Não há firewall bloqueando o acesso ao web.whatsapp.com
+- Tente desabilitar proxy ou VPN temporariamente
+
+### Problema: Bot desconecta após algum tempo
+
+- Isso é normal quando o WhatsApp Web expira a sessão
+- Escaneie o QR Code novamente quando solicitado
+- Os dados das transações não são perdidos
 
 ## 📝 Notas
 

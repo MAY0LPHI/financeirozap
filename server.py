@@ -348,6 +348,15 @@ def read_qr_from_node_output():
             line = line.strip()
             print(line)  # Print to console
             
+            # Detect Chrome/Chromium issues
+            if 'Could not find Chrome' in line or 'Chrome' in line and 'not found' in line.lower():
+                qr_code_data["status"] = "Erro: Chrome/Chromium não encontrado"
+                print("\n❌ Chrome/Chromium não encontrado!")
+                print("Por favor, instale o Chrome ou Chromium:")
+                print("  - Ubuntu/Debian: sudo apt install chromium-browser")
+                print("  - Ou defina CHROME_PATH no arquivo .env")
+                continue
+            
             # Detect QR code start
             if 'QR Code recebido' in line or 'Escaneie com seu WhatsApp' in line:
                 in_qr_block = True
@@ -425,6 +434,49 @@ def start_node_server():
         qr_code_data["status"] = f"Erro: {str(e)}"
 
 
+def check_chrome_installation():
+    """Check if Chrome/Chromium is available."""
+    chrome_paths = [
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium',
+        '/usr/bin/chromium-browser',
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    ]
+    
+    # Check CHROME_PATH environment variable
+    chrome_path_env = os.environ.get('CHROME_PATH')
+    if chrome_path_env:
+        chrome_paths.insert(0, chrome_path_env)
+    
+    for path in chrome_paths:
+        if os.path.exists(path):
+            return True, path
+    
+    # Try which command on Unix-like systems
+    try:
+        result = subprocess.run(['which', 'google-chrome'], 
+                              capture_output=True, 
+                              text=True,
+                              timeout=5)
+        if result.returncode == 0 and result.stdout.strip():
+            return True, result.stdout.strip()
+    except:
+        pass
+    
+    try:
+        result = subprocess.run(['which', 'chromium'], 
+                              capture_output=True, 
+                              text=True,
+                              timeout=5)
+        if result.returncode == 0 and result.stdout.strip():
+            return True, result.stdout.strip()
+    except:
+        pass
+    
+    return False, None
+
+
 def main():
     """Main function to start the Python server."""
     # Validate ports are in acceptable range
@@ -448,6 +500,19 @@ def main():
     print("  FinanceiroZap - Sistema de Controle Financeiro WhatsApp")
     print("=" * 60)
     print()
+    
+    # Check Chrome installation
+    chrome_found, chrome_path = check_chrome_installation()
+    if chrome_found:
+        print(f"✅ Chrome/Chromium encontrado: {chrome_path}")
+    else:
+        print("⚠️  AVISO: Chrome/Chromium não encontrado!")
+        print("   O bot do WhatsApp precisa do Chrome para funcionar.")
+        print("   Instale com:")
+        print("   - Ubuntu/Debian: sudo apt install chromium-browser")
+        print("   - Windows: Baixe em https://www.google.com/chrome/")
+        print("   - Ou defina CHROME_PATH no arquivo .env")
+        print()
     
     # Start Node.js server in background
     node_thread = threading.Thread(target=start_node_server, daemon=True)
