@@ -317,7 +317,11 @@ console.log('Aguarde enquanto o bot se conecta...\n');
 client.initialize().catch(error => {
     console.error('\n❌ Erro ao inicializar o bot:', error.message);
     
-    if (error.message.includes('Could not find Chrome')) {
+    // Check for Chrome-related errors (multiple possible error messages)
+    if (error.message.includes('Could not find Chrome') || 
+        error.message.includes('chrome') || 
+        error.message.includes('Chromium') ||
+        error.message.includes('browserVersion')) {
         console.error('\n🔧 SOLUÇÃO:');
         console.error('   O Chrome/Chromium não está instalado.');
         console.error('   Execute um dos seguintes comandos:\n');

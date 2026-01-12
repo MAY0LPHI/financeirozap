@@ -32,14 +32,19 @@ cd financeirozap
 npm install
 ```
 
-> **Nota**: O comando `npm install` instalará automaticamente o Chrome/Chromium necessário para o funcionamento do bot. Se houver algum erro, você pode executar manualmente: `npm run setup`
+3. Instale o Chrome/Chromium (necessário para o bot funcionar):
+```bash
+npm run setup
+```
 
-3. Inicie o bot:
+> **Nota**: O Chrome/Chromium é necessário porque o bot automatiza o WhatsApp Web. Se o comando acima falhar devido a problemas de rede, você pode instalar o Chrome/Chromium manualmente no seu sistema.
+
+4. Inicie o bot:
 ```bash
 npm start
 ```
 
-4. Escaneie o QR Code que aparecerá no terminal com seu WhatsApp:
+5. Escaneie o QR Code que aparecerá no terminal com seu WhatsApp:
    - Abra o WhatsApp no celular
    - Vá em **Configurações** > **Aparelhos conectados**
    - Toque em **Conectar um aparelho**
