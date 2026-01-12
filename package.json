@@ -7,6 +7,7 @@
     "start": "node index.js",
     "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "verify": "node test-qr-setup.js",
     "postinstall": "node -e \"console.log('\\n✅ Dependências instaladas com sucesso!\\n⚠️  Certifique-se de que o Chrome/Chromium está instalado no sistema.\\n');\""
   },
   "keywords": [],

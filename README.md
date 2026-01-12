@@ -136,6 +136,20 @@ Após executar o script, uma página web será aberta automaticamente mostrando:
 
 Quando conectado, o painel de controle abrirá automaticamente!
 
+### 🧪 Verificação da Instalação
+
+Antes de iniciar o sistema, você pode verificar se tudo está configurado corretamente:
+
+```bash
+npm run verify
+```
+
+Este comando verifica:
+- ✅ Versão do Node.js
+- ✅ Dependências instaladas
+- ✅ Chrome/Chromium disponível
+- ✅ Estrutura do projeto
+
 ### 🔧 Instalação Manual (Avançado)
 
 Se preferir executar manualmente:
@@ -151,20 +165,25 @@ cd financeirozap
 npm install
 ```
 
-3. **Opção A - Usar o servidor Python (Recomendado):**
+3. **Verifique a instalação (Recomendado):**
+```bash
+npm run verify
+```
+
+4. **Opção A - Usar o servidor Python (Recomendado):**
 ```bash
 python server.py
 # ou no Linux/Mac:
 python3 server.py
 ```
 
-4. **Opção B - Usar apenas Node.js:**
+5. **Opção B - Usar apenas Node.js:**
 ```bash
 npm start
 ```
 *Nota: Com esta opção, o QR Code será exibido apenas no terminal*
 
-5. **Acesse o painel:**
+6. **Acesse o painel:**
    - Com servidor Python: `http://localhost:8080` (página de conexão)
    - Painel de controle: `http://localhost:3000`
 
