@@ -7,6 +7,10 @@ const path = require('path');
 const TRANSACTIONS_FILE = path.join(__dirname, 'data', 'transactions.json');
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 
+// Regex patterns
+const AMOUNT_REGEX = /R?\$?\s*(\d+(?:[.,]\d{1,2})?)/i;
+const CATEGORY_REGEX = /em\s+([a-záàâãéèêíïóôõöúçñ]+)/i;
+
 // Initialize WhatsApp client
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -59,34 +63,61 @@ client.on('message', async (message) => {
     }
 });
 
+// Helper function to generate new transaction ID
+function generateNewId(transactions) {
+    if (transactions.length === 0) {
+        return 1;
+    }
+    
+    const validIds = transactions
+        .map(t => t.id)
+        .filter(id => typeof id === 'number' && !isNaN(id));
+    
+    if (validIds.length === 0) {
+        return 1;
+    }
+    
+    return Math.max(...validIds) + 1;
+}
+
+// Helper function to extract amount from text
+function extractAmount(text) {
+    const amountMatch = text.match(AMOUNT_REGEX);
+    if (!amountMatch) {
+        return null;
+    }
+    return parseFloat(amountMatch[1].replace(',', '.'));
+}
+
+// Helper function to extract category from text
+function extractCategory(text) {
+    const categoryMatch = text.match(CATEGORY_REGEX);
+    if (categoryMatch) {
+        return categoryMatch[1].toLowerCase();
+    }
+    return 'geral';
+}
+
 // Handle expense registration
 async function handleRegisterExpense(message) {
     try {
         const text = message.body;
         
-        // Extract amount (looking for R$ or numeric values)
-        const amountMatch = text.match(/R?\$?\s*(\d+(?:[.,]\d{1,2})?)/i);
-        if (!amountMatch) {
+        // Extract amount
+        const amount = extractAmount(text);
+        if (amount === null) {
             await message.reply('Não consegui identificar o valor. Use o formato: "Registrar despesa de R$50 em alimentação"');
             return;
         }
         
-        const amount = parseFloat(amountMatch[1].replace(',', '.'));
-        
-        // Extract category (words after "em" or common categories)
-        let category = 'geral';
-        const categoryMatch = text.match(/em\s+([a-záàâãéèêíïóôõöúçñ]+)/i);
-        if (categoryMatch) {
-            category = categoryMatch[1].toLowerCase();
-        }
+        // Extract category
+        const category = extractCategory(text);
         
         // Load existing transactions
         const transactions = await loadTransactions();
         
         // Generate new ID
-        const newId = transactions.length > 0 
-            ? Math.max(...transactions.map(t => t.id)) + 1 
-            : 1;
+        const newId = generateNewId(transactions);
         
         // Create new transaction
         const newTransaction = {
@@ -115,28 +146,20 @@ async function handleRegisterIncome(message) {
         const text = message.body;
         
         // Extract amount
-        const amountMatch = text.match(/R?\$?\s*(\d+(?:[.,]\d{1,2})?)/i);
-        if (!amountMatch) {
+        const amount = extractAmount(text);
+        if (amount === null) {
             await message.reply('Não consegui identificar o valor. Use o formato: "Registrar entrada de R$1000 em salário"');
             return;
         }
         
-        const amount = parseFloat(amountMatch[1].replace(',', '.'));
-        
         // Extract category
-        let category = 'geral';
-        const categoryMatch = text.match(/em\s+([a-záàâãéèêíïóôõöúçñ]+)/i);
-        if (categoryMatch) {
-            category = categoryMatch[1].toLowerCase();
-        }
+        const category = extractCategory(text);
         
         // Load existing transactions
         const transactions = await loadTransactions();
         
         // Generate new ID
-        const newId = transactions.length > 0 
-            ? Math.max(...transactions.map(t => t.id)) + 1 
-            : 1;
+        const newId = generateNewId(transactions);
         
         // Create new transaction
         const newTransaction = {
@@ -246,7 +269,13 @@ async function handleHelp(message) {
 async function loadTransactions() {
     try {
         const data = await fs.readFile(TRANSACTIONS_FILE, 'utf8');
-        return JSON.parse(data);
+        try {
+            return JSON.parse(data);
+        } catch (parseError) {
+            console.error('Erro ao parsear JSON:', parseError);
+            // Return empty array if JSON is malformed
+            return [];
+        }
     } catch (error) {
         if (error.code === 'ENOENT') {
             // File doesn't exist, return empty array
