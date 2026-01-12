@@ -19,7 +19,7 @@ function setupEventListeners() {
 }
 
 // Tab navigation
-function showTab(tabName) {
+function showTab(tabName, event) {
     const tabs = document.querySelectorAll('.tab-content');
     const buttons = document.querySelectorAll('.tab-button');
     
@@ -27,7 +27,16 @@ function showTab(tabName) {
     buttons.forEach(btn => btn.classList.remove('active'));
     
     document.getElementById(tabName).classList.add('active');
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        // Fallback: find button by text content
+        buttons.forEach(btn => {
+            if (btn.textContent.toLowerCase().includes(tabName.toLowerCase())) {
+                btn.classList.add('active');
+            }
+        });
+    }
 }
 
 // Load users

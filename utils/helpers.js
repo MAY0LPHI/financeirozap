@@ -31,7 +31,7 @@ function addTransaction(userId, type, amount, category, description = '') {
     if (!transactions) return false;
 
     const transaction = {
-        id: Date.now().toString(),
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         userId,
         type, // 'income' or 'expense'
         amount: parseFloat(amount),
@@ -110,7 +110,7 @@ function addOrUpdateUser(phoneNumber, name = '') {
     
     if (!user) {
         user = {
-            id: Date.now().toString(),
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             phoneNumber,
             name,
             createdAt: new Date().toISOString()
