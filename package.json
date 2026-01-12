@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify": "node test-qr-setup.js",
+    "postinstall": "node -e \"console.log('\\n✅ Dependências instaladas com sucesso!\\n⚠️  Certifique-se de que o Chrome/Chromium está instalado no sistema.\\n');\""
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,8 @@
     "express": "^5.2.1",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.34.4"
+  },
+  "puppeteer": {
+    "skipDownload": true
   }
 }

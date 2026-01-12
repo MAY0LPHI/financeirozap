@@ -15,12 +15,45 @@ let client = null;
 
 function initializeBot() {
     try {
+        // Try to find system Chrome/Chromium
+        const fs = require('fs');
+        const possiblePaths = [
+            '/usr/bin/google-chrome',
+            '/usr/bin/chromium',
+            '/usr/bin/chromium-browser',
+            process.env.CHROME_PATH
+        ];
+        
+        let executablePath = null;
+        for (const path of possiblePaths) {
+            if (path && fs.existsSync(path)) {
+                executablePath = path;
+                console.log(`Usando Chrome/Chromium em: ${executablePath}`);
+                break;
+            }
+        }
+        
+        const puppeteerConfig = {
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+                '--disable-gpu'
+            ]
+        };
+        
+        // Use system Chrome if found
+        if (executablePath) {
+            puppeteerConfig.executablePath = executablePath;
+        }
+        
         client = new Client({
             authStrategy: new LocalAuth(),
-            puppeteer: {
-                headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox']
-            }
+            puppeteer: puppeteerConfig
         });
 
         client.on('qr', (qr) => {
@@ -32,6 +65,14 @@ function initializeBot() {
             console.log('Bot do WhatsApp está pronto!');
         });
 
+        client.on('authenticated', () => {
+            console.log('WhatsApp autenticado com sucesso!');
+        });
+
+        client.on('auth_failure', (msg) => {
+            console.error('Falha na autenticação:', msg);
+        });
+
         client.on('message', async (message) => {
             await handleMessage(message);
         });
@@ -40,8 +81,17 @@ function initializeBot() {
             console.log('Bot desconectado:', reason);
         });
 
+        client.on('loading_screen', (percent, message) => {
+            console.log(`Carregando WhatsApp: ${percent}% - ${message}`);
+        });
+
         client.initialize().catch(err => {
             console.error('Erro ao inicializar WhatsApp Web:', err.message);
+            if (err.message.includes('ERR_NAME_NOT_RESOLVED')) {
+                console.error('Verifique sua conexão com a internet.');
+            } else if (err.message.includes('Chrome')) {
+                console.error('Verifique se o Chrome/Chromium está instalado corretamente.');
+            }
         });
     } catch (error) {
         console.error('Erro ao configurar cliente WhatsApp:', error.message);

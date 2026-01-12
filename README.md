@@ -86,6 +86,7 @@ financeirozap/
 - Node.js (versão 14 ou superior)
 - Python 3.7 ou superior
 - npm ou yarn
+- **Google Chrome ou Chromium** (necessário para o bot do WhatsApp)
 
 ### 🚀 Início Rápido (Recomendado)
 
@@ -135,6 +136,20 @@ Após executar o script, uma página web será aberta automaticamente mostrando:
 
 Quando conectado, o painel de controle abrirá automaticamente!
 
+### 🧪 Verificação da Instalação
+
+Antes de iniciar o sistema, você pode verificar se tudo está configurado corretamente:
+
+```bash
+npm run verify
+```
+
+Este comando verifica:
+- ✅ Versão do Node.js
+- ✅ Dependências instaladas
+- ✅ Chrome/Chromium disponível
+- ✅ Estrutura do projeto
+
 ### 🔧 Instalação Manual (Avançado)
 
 Se preferir executar manualmente:
@@ -150,20 +165,25 @@ cd financeirozap
 npm install
 ```
 
-3. **Opção A - Usar o servidor Python (Recomendado):**
+3. **Verifique a instalação (Recomendado):**
+```bash
+npm run verify
+```
+
+4. **Opção A - Usar o servidor Python (Recomendado):**
 ```bash
 python server.py
 # ou no Linux/Mac:
 python3 server.py
 ```
 
-4. **Opção B - Usar apenas Node.js:**
+5. **Opção B - Usar apenas Node.js:**
 ```bash
 npm start
 ```
 *Nota: Com esta opção, o QR Code será exibido apenas no terminal*
 
-5. **Acesse o painel:**
+6. **Acesse o painel:**
    - Com servidor Python: `http://localhost:8080` (página de conexão)
    - Painel de controle: `http://localhost:3000`
 
@@ -230,6 +250,66 @@ Para modo de desenvolvimento com recarga automática:
 ```bash
 npm run dev
 ```
+
+## 🔧 Solução de Problemas
+
+### Problema: QR Code não é exibido
+
+Se o QR Code do WhatsApp não aparecer, verifique:
+
+1. **Chrome/Chromium está instalado?**
+   
+   **Linux (Ubuntu/Debian):**
+   ```bash
+   sudo apt update
+   sudo apt install chromium-browser
+   # ou
+   sudo apt install google-chrome-stable
+   ```
+   
+   **Windows:**
+   - Baixe e instale o Google Chrome em: https://www.google.com/chrome/
+   
+   **macOS:**
+   ```bash
+   brew install --cask google-chrome
+   ```
+
+2. **Configurar caminho do Chrome manualmente:**
+   
+   Crie um arquivo `.env` baseado no `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edite o arquivo `.env` e defina o caminho do Chrome:
+   ```
+   CHROME_PATH=/usr/bin/google-chrome
+   ```
+   
+   Caminhos comuns:
+   - Linux: `/usr/bin/google-chrome`, `/usr/bin/chromium`, `/usr/bin/chromium-browser`
+   - Windows: `C:\Program Files\Google\Chrome\Application\chrome.exe`
+   - macOS: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
+
+3. **Reinstalar dependências:**
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+### Problema: Erro de conexão ERR_NAME_NOT_RESOLVED
+
+Este erro indica problema de conexão com a internet. Verifique:
+- Sua conexão com a internet está funcionando
+- Não há firewall bloqueando o acesso ao web.whatsapp.com
+- Tente desabilitar proxy ou VPN temporariamente
+
+### Problema: Bot desconecta após algum tempo
+
+- Isso é normal quando o WhatsApp Web expira a sessão
+- Escaneie o QR Code novamente quando solicitado
+- Os dados das transações não são perdidos
 
 ## 📝 Notas
 
