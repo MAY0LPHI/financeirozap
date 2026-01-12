@@ -14,28 +14,39 @@ const {
 let client = null;
 
 function initializeBot() {
-    client = new Client({
-        authStrategy: new LocalAuth(),
-        puppeteer: {
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        }
-    });
+    try {
+        client = new Client({
+            authStrategy: new LocalAuth(),
+            puppeteer: {
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            }
+        });
 
-    client.on('qr', (qr) => {
-        console.log('QR Code recebido! Escaneie com seu WhatsApp:');
-        qrcode.generate(qr, { small: true });
-    });
+        client.on('qr', (qr) => {
+            console.log('QR Code recebido! Escaneie com seu WhatsApp:');
+            qrcode.generate(qr, { small: true });
+        });
 
-    client.on('ready', () => {
-        console.log('Bot do WhatsApp está pronto!');
-    });
+        client.on('ready', () => {
+            console.log('Bot do WhatsApp está pronto!');
+        });
 
-    client.on('message', async (message) => {
-        await handleMessage(message);
-    });
+        client.on('message', async (message) => {
+            await handleMessage(message);
+        });
 
-    client.initialize();
+        client.on('disconnected', (reason) => {
+            console.log('Bot desconectado:', reason);
+        });
+
+        client.initialize().catch(err => {
+            console.error('Erro ao inicializar WhatsApp Web:', err.message);
+        });
+    } catch (error) {
+        console.error('Erro ao configurar cliente WhatsApp:', error.message);
+        throw error;
+    }
 }
 
 async function handleMessage(message) {

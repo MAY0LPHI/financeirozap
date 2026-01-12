@@ -1,3 +1,10 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "1768180606499",
+      "phoneNumber": "5511999999999",
+      "name": "Usuário Teste",
+      "createdAt": "2026-01-12T01:16:46.499Z"
+    }
+  ]
 }

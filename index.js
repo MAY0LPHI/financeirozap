@@ -21,7 +21,13 @@ app.get('/', (req, res) => {
 
 // Initialize WhatsApp Bot
 console.log('Iniciando bot do WhatsApp...');
-initializeBot();
+try {
+    initializeBot();
+} catch (error) {
+    console.error('Erro ao inicializar bot do WhatsApp:', error.message);
+    console.log('O servidor web continuará funcionando normalmente.');
+    console.log('Para usar o bot, certifique-se de que o Chrome/Chromium está instalado.');
+}
 
 // Start server
 app.listen(PORT, () => {
