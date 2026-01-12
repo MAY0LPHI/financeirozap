@@ -86,6 +86,7 @@ function extractAmount(text) {
     if (!amountMatch) {
         return null;
     }
+    // Replace comma with dot for decimal parsing (handles Brazilian format like 25,50)
     return parseFloat(amountMatch[1].replace(',', '.'));
 }
 
@@ -287,7 +288,17 @@ async function loadTransactions() {
 
 // Save transactions to file
 async function saveTransactions(transactions) {
-    await fs.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2), 'utf8');
+    try {
+        // Ensure data directory exists
+        const dataDir = path.dirname(TRANSACTIONS_FILE);
+        await fs.mkdir(dataDir, { recursive: true });
+        
+        // Write transactions to file
+        await fs.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Erro ao salvar transações:', error);
+        throw error;
+    }
 }
 
 // Error handling
